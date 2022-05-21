@@ -1,0 +1,15 @@
+{
+  "name": "chat-app",
+  "version": "1.0.0",
+  "main": "server.js",
+  "repository": "https://github.com/DmitrySkok/chat-app.git",
+  "author": "Dmitry Skok <dimas.skok95@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.1",
+    "nodemon": "^2.0.16"
+  },
+  "scripts": {
+    "start": "nodemon"
+  }
+}
