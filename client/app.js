@@ -1,14 +1,20 @@
+/* add webSocket */
+const socket = io();
+
+/* DOM elements */
 const loginForm = document.getElementById('welcome-form');
 const messagesSection = document.getElementById('messages-section');
 const messagesList = document.getElementById('messages-list');
 const addMessageForm = document.getElementById('add-messages-form');
 const userNameInput = document.getElementById('username');
-const messageContentInput = document.getElementById('message-content'); //?
+const messageContentInput = document.getElementById('message-content');
 
+/* reassignable variables */
 let userName = '';
 
-const login = function (event) {
-  event.preventDefault();
+/* functions */
+function login(e) {
+  e.preventDefault();
   if (userNameInput.value) {
     userName = userNameInput.value;
     loginForm.classList.remove('show');
@@ -18,7 +24,7 @@ const login = function (event) {
   }
 }
 
- const addMessage =  function (author, content) {
+ function addMessage(author, content) {
   const message = document.createElement('li');
   message.classList.add('message');
   message.classList.add('message--received');
@@ -32,15 +38,23 @@ const login = function (event) {
   messagesList.appendChild(message);
 }
 
-const sendMessage = function (event) {
-  event.preventDefault();
-  if (messageContentInput.value) {
-    addMessage(userName, messageContentInput.value);
+function sendMessage(e) {
+  e.preventDefault();
+  let messageContent = messageContentInput.value;
+  if(!messageContent.length) {
+    alert('You have to type something!');
+  }
+  else {
+    addMessage(userName, messageContent);
+    socket.emit('message', { author: userName, content: messageContent })
     messageContentInput.value = '';
-  } else {
-    alert('please type your message');
   }
 }
+/* end functions */
 
+/* webSocket listeners */
+socket.on('message', ({ author, content }) => addMessage(author, content));
+
+/* JS listeners */
 loginForm.addEventListener('submit', login);
 addMessageForm.addEventListener('submit', sendMessage);
