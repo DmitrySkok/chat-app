@@ -17,6 +17,7 @@ function login(e) {
   e.preventDefault();
   if (userNameInput.value) {
     userName = userNameInput.value;
+    socket.emit('join', { name: userName, id: socket.id });
     loginForm.classList.remove('show');
     messagesSection.classList.add('show');
   } else {

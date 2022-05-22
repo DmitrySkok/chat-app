@@ -4,6 +4,7 @@ const socket = require('socket.io');
 
 const db = require('./db.js');
 const messages = db.messages;
+const users = db.users;
 
 const app = express();
 
@@ -16,8 +17,12 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '/client/index.html'));
 });
 
-// app.get('/db', (req, res) => {
+// app.get('/db/messages', (req, res) => {
 //   res.send(messages);
+// });
+
+// app.get('/db/users', (req, res) => {
+//   res.send(users);
 // });
 
 app.use((req, res) => {
@@ -34,11 +39,19 @@ const io = socket(server, {
 
 io.on('connection', (socket) => {
   console.log('New client! Its id – ' + socket.id);
+  socket.on('join', (user) => {
+    console.log(`User ${user.name} logged`);
+    users.push(user);
+  })
   socket.on('message', (message) => {
     console.log('Oh, I\'ve got something from ' + socket.id)
     messages.push(message);
     socket.broadcast.emit('message', message);
   });
-  socket.on('disconnect', () => { console.log('Oh, socket ' + socket.id + ' has left') });
+  socket.on('disconnect', () => { 
+    console.log('Oh, socket ' + socket.id + ' has left');
+    const index = users.findIndex(user => user.id === socket.id);
+    users.splice(index, 1);
+  });
   console.log('I\'ve added a listener on message event \n');
 });

@@ -1,7 +1,6 @@
 const db = {
-  messages: [
-
-  ],
+  messages: [],
+  users: [],
 };
 
 module.exports = db;
