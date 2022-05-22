@@ -42,6 +42,7 @@ io.on('connection', (socket) => {
   socket.on('join', (user) => {
     console.log(`User ${user.name} logged`);
     users.push(user);
+    socket.broadcast.emit('message', { author: 'Chat Bot', content: `<i>${user.name} has joined the conversation!</i>` });
   })
   socket.on('message', (message) => {
     console.log('Oh, I\'ve got something from ' + socket.id)
@@ -51,6 +52,7 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => { 
     console.log('Oh, socket ' + socket.id + ' has left');
     const index = users.findIndex(user => user.id === socket.id);
+    socket.broadcast.emit('message', { author: 'Chat Bot', content: `<i>${users[index].name} has left the conversation... :(</i>` });
     users.splice(index, 1);
   });
   console.log('I\'ve added a listener on message event \n');
